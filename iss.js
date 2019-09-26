@@ -64,10 +64,10 @@ const fetchISSFLyOverTimes = function(coords, callback) {
       return;
     }
     let myData = JSON.parse(body).response;
+    // console.log(myData);
+    // let { duration, risetime } = myData;//unpacks only latitude and longigute
 
-    let { duration, risetime } = myData;//unpacks only latitude and longigute
-
-    callback(null, { duration, risetime });
+    callback(null, myData);
 
 
   });
