@@ -1,4 +1,4 @@
-const { fetchMyIP } = require(`./iss`);
+const { fetchMyIP, fetchCoordsByIP } = require(`./iss`);
 
 
 fetchMyIP(
@@ -9,5 +9,15 @@ fetchMyIP(
     }
     console.log('It worked! Returned IP:', ip);
   }
-
 );
+/*
+fetchCoordsByIP("66.207.199.230", (error, data) => {
+  if (error) {
+    console.log("It didn't work!", error);
+  } else {
+    // console.log(`It worked! Location is lat: ${data.latitude}, long: ${data.longitude}`);
+    console.log(data);
+  }
+
+});
+*/

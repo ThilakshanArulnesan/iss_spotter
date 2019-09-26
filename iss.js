@@ -14,9 +14,63 @@ const request = require(`request`);
 const fetchMyIP = function(callback) {
   // use request to fetch IP address from JSON API
   request(`https://geo.ipify.org/api/v1?apiKey=${API_KEY}`, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
+      callback(Error(msg), null);
+      return;
+    }
 
     callback(error, JSON.parse(body).ip);
   });
 };
 
-module.exports = { fetchMyIP };
+const fetchCoordsByIP = function(ip, callback) {
+  request(`https://ipvigilante.com/${ip}`, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
+      callback(Error(msg), null);
+      return;
+    }
+    let myData = JSON.parse(body).data;
+
+    let { latitude, longitude } = myData;//unpacks only latitude and longigute
+
+    callback(null, { latitude, longitude });
+
+
+  });
+}
+
+const fetchISSFLyOverTimes = function(coords, callback) {
+  request(`http://api.open-notify.org/iss-pass.json?lat=${coords.latitude}&lon=${coords.longitude}`, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
+      callback(Error(msg), null);
+      return;
+    }
+    let myData = JSON.parse(body).response;
+
+    let { duration, risetime } = myData;//unpacks only latitude and longigute
+
+    callback(null, { duration, risetime });
+
+
+  });
+}
+
+module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFLyOverTimes };
